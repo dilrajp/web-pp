@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tentang Kami - Pohon Printing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #1a1a1a;
+            color: white;
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .page-container {
+            min-height: 100vh;
+            background: #1a1a1a;
+            position: relative;
+        }
+
+        /* Parallax Background Layers */
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120vh;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+            z-index: -1;
+            will-change: transform;
+        }
+
+        /* Header Navigation */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 40px 0px 100px;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            will-change: transform;
+        }
+
+        .header.scrolled {
+            background: rgba(26, 26, 26, 0.95);
+            padding: 15px 40px 0px 100px;
+            transform: translateY(0);
+        }
+
+        .brand {
+            font-size: 18px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .brand img {
+            height: 80px;
+            width: auto;
+            opacity: 0.9;
+            transition: all 0.3s ease;
+            filter: brightness(0) invert(1);
+            /* padding: 8px 12px; */
+            border-radius: 4px;
+        }
+
+        .brand img:hover {
+            opacity: 1;
+            filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+        }
+
+        .navigation {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-item {
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        .nav-item.active,
+        .nav-item:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding-top: 100px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-left: 40px;
+            padding-right: 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Enhanced Section Animations */
+        .section {
+            opacity: 0;
+            transform: translateY(100px) scale(0.95);
+            transition: all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            margin-bottom: 10px;
+            will-change: transform, opacity;
+        }
+
+        .section.animate-in {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Parallax Text Effects */
+        .section-title {
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 30px;
+            margin-top: 50px;
+            opacity: 0.8;
+            color: #ccc;
+            transform: translateY(50px);
+            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+        }
+
+        .section.animate-in .section-title {
+            transform: translateY(0);
+        }
+
+        /* Client Logos with Parallax */
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 40px;
+            align-items: center;
+            justify-items: center;
+            margin-bottom: 40px;
+            transform: translateY(80px);
+            transition: all 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .section.animate-in .clients-grid {
+            transform: translateY(0);
+        }
+
+        .client-logo {
+            opacity: 0.6;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            filter: grayscale(100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 60px;
+            transform: translateY(30px) scale(0.9);
+            will-change: transform, filter;
+        }
+
+        .section.animate-in .client-logo {
+            transform: translateY(0) scale(1);
+        }
+
+        .client-logo:hover {
+            opacity: 1;
+            filter: grayscale(0%);
+            transform: translateY(-10px) scale(1.1);
+        }
+
+        .client-logo img {
+            max-height: 40px;
+            max-width: 120px;
+            object-fit: contain;
+        }
+
+        /* About Section Parallax */
+        .about-content {
+            max-width: 900px;
+            margin: 0 auto;
+            transform: translateY(60px);
+            transition: all 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .section.animate-in .about-content {
+            transform: translateY(0);
+        }
+
+        .about-text {
+            font-size: 16px;
+            line-height: 1.8;
+            opacity: 0.9;
+            font-weight: 300;
+            transform: translateY(40px);
+            transition: all 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .section.animate-in .about-text {
+            transform: translateY(0);
+        }
+
+        .about-text:nth-child(2) {
+            transition-delay: 0.2s;
+        }
+
+        .about-text strong {
+            color: #fff;
+            font-weight: 800;
+        }
+
+        /* Portfolio with Horizontal Scroll */
+        .portfolio-section {
+            padding: 0px 0;
+            margin-left: -30vw;
+            margin-right: 0;
+            width: calc(200vw);
+            position: relative;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-rows: repeat(2, 1fr);
+            grid-auto-flow: column;
+            grid-auto-columns: 400px;
+            gap: 20px;
+            height: 600px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 20px 0 20px 100px;
+            scroll-behavior: smooth;
+            transform: translateY(120px) scale(0.9);
+            transition: all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .portfolio-grid::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .portfolio-grid::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .portfolio-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .portfolio-grid::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .section.animate-in .portfolio-grid {
+            transform: translateY(0) scale(1);
+        }
+
+        .portfolio-item {
+            /* --------- PERUBAHAN DI SINI --------- */
+            overflow: visible;          /* Agar gambar rotasi tidak terpotong */
+            padding: 8px;               /* Sedikit ruang untuk menahan rotasi */
+            width: 400px;
+            height: 280px;
+            background: transparent;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.4s ease;
+            transform: translateY(60px) rotateX(15deg);
+            will-change: transform;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        /* 
+           Gambar akan di-tilt lewat JS, jadi hilangkan aturan rotate statis 
+           dan biarkan JS menambahkan `transform: rotate(angle) scale(...)`.
+        */
+        .portfolio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+            display: block;
+            transform-origin: center center;  /* Pastikan rotasi di tengah */
+        }
+
+        .section.animate-in .portfolio-item {
+            transform: translateY(0) rotateX(0deg);
+        }
+
+        .portfolio-item:nth-child(odd) {
+            transition-delay: 0.1s;
+        }
+
+        .portfolio-item:nth-child(even) {
+            transition-delay: 0.2s;
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-20px) scale(1.05) rotateX(-5deg);
+            z-index: 10;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .portfolio-item:hover img {
+            /* transform: scale(1.2) rotate(0deg) !important; */
+        }
+
+        .portfolio-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            transition: opacity 0.1s ease;
+            border-radius: 8px;
+        }
+
+        .portfolio-item:hover::after {
+            opacity: 1;
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .floating-element:nth-child(3) {
+            bottom: 30%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-30px) scale(1.5);
+                opacity: 0.8;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .clients-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .navigation {
+                gap: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .main-content {
+                padding-left: 20px;
+                padding-right: 20px;
+                padding-top: 140px;
+            }
+
+            .clients-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            .clients-grid-bottom {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .portfolio-section {
+                margin-left: -100vw;
+                margin-right: 0;
+                width: calc(200vw);
+            }
+
+            .portfolio-grid {
+                height: 400px;
+                grid-auto-columns: 250px;
+                padding: 15px 0 15px 50px;
+            }
+
+            .portfolio-item,
+            .portfolio-item:nth-child(n) {
+                width: 250px;
+                height: 180px;
+            }
+
+            .about-text {
+                font-size: 14px;
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .portfolio-section {
+                margin-left: -100vw;
+                margin-right: 0;
+                width: calc(200vw);
+            }
+
+            .portfolio-grid {
+                height: 300px;
+                gap: 30px;       
+                grid-auto-columns: 400px; 
+                padding: 15px 0 15px 30px;
+            }
+
+            .portfolio-item,
+            .portfolio-item:nth-child(n) {
+                width: 200px;
+                height: 130px;
+            }
+
+            .clients-grid,
+            .clients-grid-bottom {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .clients-grid-bottom {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            align-items: center;
+            justify-items: center;
+            max-width: 600px;
+            margin: 0 auto;
+            transform: translateY(100px);
+            transition: all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .section.animate-in .clients-grid-bottom {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Parallax Background -->
+        <div class="parallax-bg"></div>
+        
+        <!-- Floating Elements -->
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+
+        <!-- Navigation Header -->
+        <header class="header">
+            <div class="brand">
+                <a href="index.html" class="nav-text">
+                    <img src="assets/logo-pp.png" alt="Pohon Printing Logo">
+                </a>
+            </div>
+            <nav class="navigation">
+                <!-- <div class="nav-item">
+                    <a href="index.html" class="nav-text">POHONPRINTING</a>
+                </div> -->
+                <div class="nav-item active">
+                    <span class="nav-text">TENTANG KAMI</span>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-text">PRODUK</span>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-text">TESTIMONI</span>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Client Logos Section -->
+            <section class="clients-section section">
+                <h2 class="section-title">[KLIEN KAMI]</h2>
+                <div class="clients-grid">
+                    <div class="client-logo">
+                        <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
+                            <text x="10" y="25" font-family="Arial" font-size="16" font-weight="bold" fill="white">grammarly</text>
+                        </svg>
+                    </div>
+                    <div class="client-logo">
+                        <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
+                            <circle cx="20" cy="20" r="15" fill="#1DB954"/>
+                            <text x="40" y="25" font-family="Arial" font-size="16" font-weight="bold" fill="white">Spotify</text>
+                        </svg>
+                    </div>
+                    <div class="client-logo">
+                        <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
+                            <text x="10" y="25" font-family="Arial" font-size="18" font-weight="bold" fill="white">Google</text>
+                        </svg>
+                    </div>
+                    <div class="client-logo">
+                        <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
+                            <text x="10" y="25" font-family="Arial" font-size="16" font-weight="bold" fill="#FF0000">Adobe</text>
+                        </svg>
+                    </div>
+                    <div class="client-logo">
+                        <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
+                            <text x="10" y="25" font-family="Arial" font-size="16" font-weight="bold" fill="#00C4CC" font-style="italic">Canva</text>
+                        </svg>
+                    </div>
+                    <div class="client-logo">
+                        <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
+                            <text x="10" y="25" font-family="Arial" font-size="14" font-weight="bold" fill="white">webflow</text>
+                        </svg>
+                    </div>
+                </div>
+                <div class="clients-grid-bottom">
+                    <div class="client-logo">
+                        <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
+                            <circle cx="15" cy="20" r="3" fill="#FF4458"/>
+                            <text x="25" y="25" font-family="Arial" font-size="16" font-weight="bold" fill="white">tinder</text>
+                        </svg>
+                    </div>
+                    <div class="client-logo">
+                        <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
+                            <text x="10" y="25" font-family="Arial" font-size="14" font-weight="bold" fill="white">coinbase</text>
+                        </svg>
+                    </div>
+                    <div class="client-logo">
+                        <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
+                            <circle cx="20" cy="20" r="15" fill="#00704A"/>
+                            <text x="10" y="25" font-family="Arial" font-size="12" font-weight="bold" fill="white">★</text>
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section class="about-section section">
+                <h2 class="section-title">[TENTANG KAMI]</h2>
+                <div class="about-content">
+                    <p class="about-text">
+                        <strong>PohonPrinting</strong> adalah mitra terpercaya Anda dalam solusi cetak lengkap yang mengutamakan kualitas dan kepuasan pelanggan. Berakar dari semangat inovasi dan dedikasi, kami hadir untuk membantu mewujudkan ide-ide kreatif Anda menjadi produk cetak yang nyata dan berdampak.
+                    </p>
+                    <p class="about-text">
+                        Dengan pengalaman bertahun-tahun di industri percetakan, <strong>PohonPrinting</strong> menyediakan layanan cetak yang menyeluruh mulai dari desain, produksi, hingga pengiriman. Kami percaya bahwa setiap proyek adalah sebuah pohon yang perlu dirawat dengan baik agar tumbuh kuat dan menghasilkan buah yang memuaskan.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Portfolio Gallery -->
+            <section class="portfolio-section section">
+                <div class="portfolio-grid">
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400&h=600&fit=crop" alt="Portfolio Item 1" />
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=400&h=300&fit=crop" alt="Portfolio Item 2" />
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=600&fit=crop" alt="Portfolio Item 3" />
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop" alt="Portfolio Item 4" />
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop" alt="Portfolio Item 5" />
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=400&h=400&fit=crop" alt="Portfolio Item 6" />
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400&h=600&fit=crop" alt="Portfolio Item 7" />
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="Portfolio Item 8" />
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=400&fit=crop" alt="Portfolio Item 9" />
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="Portfolio Item 10" />
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=400&h=400&fit=crop" alt="Portfolio Item 11" />
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400&h=600&fit=crop" alt="Portfolio Item 12" />
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="Portfolio Item 13" />
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=400&fit=crop" alt="Portfolio Item 14" />
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="Portfolio Item 15" />
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Advanced Parallax Scrolling Effects
+        let ticking = false;
+        
+        function updateParallax() {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            
+            // Parallax background
+            const parallaxBg = document.querySelector('.parallax-bg');
+            if (parallaxBg) {
+                parallaxBg.style.transform = `translateY(${rate}px)`;
+            }
+            
+            // Header scroll effect
+            const header = document.querySelector('.header');
+            if (header) {
+                if (scrolled > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            }
+            
+            // Parallax elements (excluding portfolio items)
+            document.querySelectorAll('.section:not(.portfolio-section)').forEach((section, index) => {
+                const rect = section.getBoundingClientRect();
+                const speed = 0.05 + (index * 0.02);
+                const yPos = -(rect.top * speed);
+                
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    section.style.transform = `translateY(${yPos}px)`;
+                }
+            });
+            
+            ticking = false;
+        }
+        
+        function requestTick() {
+            if (!ticking) {
+                requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        }
+        
+        window.addEventListener('scroll', requestTick);
+
+        // Enhanced Intersection Observer
+        const observerOptions = {
+            threshold: [0, 0.1, 0.2, 0.3],
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                    
+                    // Stagger child animations
+                    const children = entry.target.querySelectorAll('.client-logo, .about-text');
+                    children.forEach((child, index) => {
+                        setTimeout(() => {
+                            child.style.transitionDelay = `${index * 0.1}s`;
+                            child.classList.add('animate-in');
+                        }, index * 100);
+                    });
+                }
+            });
+        }, observerOptions);
+
+        // Mouse movement parallax (excluding portfolio items)
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            document.querySelectorAll('.floating-element').forEach((element, index) => {
+                const speed = (index + 1) * 0.5;
+                const x = (mouseX - 0.5) * speed * 20;
+                const y = (mouseY - 0.5) * speed * 20;
+                
+                element.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+
+        // Navigation click effects
+        document.querySelectorAll('.nav-item a').forEach(link => {
+            link.addEventListener('click', function() {
+                this.parentElement.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.parentElement.style.transform = '';
+                }, 150);
+            });
+        });
+
+        // Enhanced portfolio hover effects
+        document.querySelectorAll('.portfolio-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                this.style.transform = 'translateY(-20px) scale(1.05) rotateX(-5deg)';
+                this.style.zIndex = '10';
+                this.style.boxShadow = '0 30px 60px rgba(0, 0, 0, 0.5)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1) rotateX(0deg)';
+                this.style.zIndex = '1';
+                this.style.boxShadow = 'none';
+            });
+        });
+
+        // Client logo hover effects
+        document.querySelectorAll('.client-logo').forEach(logo => {
+            logo.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.1)';
+                this.style.filter = 'grayscale(0%)';
+            });
+            
+            logo.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+                this.style.filter = 'grayscale(100%)';
+            });
+        });
+
+        // Observe all sections
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Smooth scrolling for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Randomly tilt each portfolio image on page load
+        function applyRandomTilt() {
+            document.querySelectorAll('.portfolio-item img').forEach(img => {
+                // Pilih sudut acak antara -6° hingga +6°
+                const angle = (Math.random() * 12) - 6;
+                img.style.transform = `rotate(${angle}deg) scale(1.04)`;
+            });
+        }
+
+        // Page load initialization
+        window.addEventListener('load', function() {
+            applyRandomTilt();
+            updateParallax();
+            document.body.classList.add('loaded');
+        });
+
+        // Auto-redirect ke index.html ketika scroll di very-top
+        window.addEventListener('scroll', function() {
+            if (window.scrollY === 0) {
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>
