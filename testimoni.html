@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testimoni - Pohon Printing</title>
+    <link rel="stylesheet" href="header.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #146560 0%, #121212 100%);
+            color: white;
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .page-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #146560 0%, #121212 100%);
+            position: relative;
+            padding-bottom: 100px;
+        }
+
+        .main-content {
+            padding-top: 150px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 40px;
+            padding-right: 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .testimonial-section {
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .section-title {
+            font-size: 48px;
+            font-weight: 900;
+            line-height: 1.2;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .title-divider {
+            width: 100px;
+            height: 4px;
+            background-color: white;
+            margin: 0 auto 40px;
+        }
+
+        .testimonial-carousel-nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .nav-arrow {
+            width: 50px;
+            height: 50px;
+            background-color: #2a2a2a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            user-select: none;
+        }
+        
+        .nav-arrow:hover {
+            background-color: #444;
+        }
+
+        .nav-arrow svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .testimonial-grid {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonial-slide {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            transition: transform 0.5s ease;
+            width: 100%;
+        }
+
+        .testimonial-slide.hidden {
+            display: none;
+        }
+
+        .testimonial-card {
+            background-color: #1a1a1a;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: left;
+            border-top: 5px solid #146560;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .testimonial-card.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stars {
+            color: #f39c12;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .testimonial-text {
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: #ccc;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            background-color: #ccc;
+            margin-right: 15px;
+        }
+
+        .author-info .name {
+            font-weight: bold;
+            display: block;
+        }
+
+        .author-info .company {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        @media (max-width: 992px) {
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 36px;
+            }
+        }
+
+        .section {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        .section.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Navigation Header -->
+        <header class="header">
+            <div class="brand">
+                <a href="index.html" class="nav-text">
+                    <img src="assets/logo-green.jpeg" alt="Pohon Printing Logo">
+                </a>
+            </div>
+            <nav class="navigation">
+                <div class="nav-item">
+                    <a href="tentang-kami.html" class="nav-text">TENTANG KAMI</a>
+                </div>
+                <div class="nav-item">
+                    <a href="produk-kami.html" class="nav-text">PRODUK</a>
+                </div>
+                <div class="nav-item active">
+                    <span class="nav-text">TESTIMONI</span>
+                </div>
+                <div class="nav-item">
+                    <a href="hubungi-kami.html" class="nav-text">HUBUNGI KAMI</a>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <section class="testimonial-section section">
+                <h3 class="section-subtitle">[TESTIMONI]</h3>
+                <h1 class="section-title">
+                    MASIH BELUM PERCAYA?<br>
+                    LIHAT APA YANG <br>
+                    KLIEN KAMI KATAKAN
+                </h1>
+
+                <div class="testimonial-carousel-nav">
+                    <div class="nav-arrow">
+                        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
+                    </div>
+                    <div class="nav-arrow">
+                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"></path></svg>
+                    </div>
+                </div>
+
+                <div class="testimonial-grid">
+                    <div class="testimonial-slide" id="slide-1">
+                        <div class="testimonial-card">
+                            <div>
+                                <div class="stars">★★★★★</div>
+                                <p class="testimonial-text">
+                                    Pelayanannya sangat memuaskan! Hasil cetaknya tajam dan warnanya sesuai dengan yang saya harapkan. Tim Pohon Printing juga sangat responsif dan membantu selama prosesnya. Pasti akan pesan lagi di sini.
+                                </p>
+                            </div>
+                            <div class="testimonial-author">
+                                <div class="author-info">
+                                    <span class="name">Andini Putri</span>
+                                    <span class="company">Creative Agency</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div>
+                                <div class="stars">★★★★★</div>
+                                <p class="testimonial-text">
+                                    Our product's quality is great! The material is feels good. The price is also competitive. The process from design to completion is very fast. Highly recommended for business needs.
+                                </p>
+                            </div>
+                            <div class="testimonial-author">
+                                <div class="author-info">
+                                    <span class="name">Budi Santoso</span>
+                                    <span class="company">PT Pasti Sedap</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div>
+                                <div class="stars">★★★★★</div>
+                                <p class="testimonial-text">
+                                    Saya sangat terbantu dengan layanan desain dari Pohon Printing. Mereka berhasil menerjemahkan ide desain saya menjadi produk dengan harga yang terjangkau. Hasil cetaknya pun sempurna, detail-detail kecil tercetak dengan jelas. Terima kasih banyak!
+                                </p>
+                            </div>
+                            <div class="testimonial-author">
+                                <div class="author-info">
+                                    <span class="name">Rina Wijaya</span>
+                                    <span class="company">Freelance Designer</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-slide hidden" id="slide-2">
+                        <div class="testimonial-card">
+                            <div>
+                                <div class="stars">★★★★★</div>
+                                <p class="testimonial-text">
+                                    Kualitas cetak yang luar biasa! Saya sudah menggunakan jasa Pohon Printing untuk berbagai kebutuhan bisnis dan hasilnya selalu memuaskan. Harga terjangkau dengan kualitas premium.
+                                </p>
+                            </div>
+                            <div class="testimonial-author">
+                                <div class="author-info">
+                                    <span class="name">Dewi Sartika</span>
+                                    <span class="company">Marketing Manager</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div>
+                                <div class="stars">★★★★★</div>
+                                <p class="testimonial-text">
+                                    Proses pengerjaan cepat dan hasil sesuai ekspektasi. Tim support sangat membantu dalam memberikan saran desain yang tepat. Recommended banget!
+                                </p>
+                            </div>
+                            <div class="testimonial-author">
+                                <div class="author-info">
+                                    <span class="name">Ahmad Fauzi</span>
+                                    <span class="company">Startup Founder</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div>
+                                <div class="stars">★★★★★</div>
+                                <p class="testimonial-text">
+                                    Sudah 2 tahun menggunakan jasa Pohon Printing untuk kebutuhan promosi event. Konsisten dalam kualitas dan selalu on time. Partner yang bisa diandalkan!
+                                </p>
+                            </div>
+                            <div class="testimonial-author">
+                                <div class="author-info">
+                                    <span class="name">Sari Indah</span>
+                                    <span class="company">Event Organizer</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Carousel functionality
+        let currentSlide = 1;
+        const totalSlides = 2;
+
+        function showSlide(slideNumber) {
+            // Hide all slides
+            for (let i = 1; i <= totalSlides; i++) {
+                const slide = document.getElementById(`slide-${i}`);
+                if (slide) {
+                    slide.classList.add('hidden');
+                }
+            }
+            
+            // Show current slide
+            const currentSlideElement = document.getElementById(`slide-${slideNumber}`);
+            if (currentSlideElement) {
+                currentSlideElement.classList.remove('hidden');
+            }
+        }
+
+        function nextSlide() {
+            currentSlide = currentSlide >= totalSlides ? 1 : currentSlide + 1;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = currentSlide <= 1 ? totalSlides : currentSlide - 1;
+            showSlide(currentSlide);
+        }
+
+        // Add event listeners to navigation arrows
+        document.addEventListener('DOMContentLoaded', function() {
+            const navArrows = document.querySelectorAll('.nav-arrow');
+            
+            navArrows[0].addEventListener('click', prevSlide); // Left arrow
+            navArrows[1].addEventListener('click', nextSlide); // Right arrow
+            
+            // Initialize first slide
+            showSlide(1);
+
+            // Animate testimonial cards
+            const cards = document.querySelectorAll('.testimonial-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('animate-in');
+                }, index * 200);
+            });
+
+            // Animate main section
+            const section = document.querySelector('.section');
+            section.classList.add('animate-in');
+        });
+    </script>
+</body>
+</html> 
